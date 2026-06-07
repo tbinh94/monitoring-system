@@ -22,9 +22,11 @@ services:
     ports:
       - "3000:3000"
     restart: unless-stopped
+    environment:
+      - GF_AUTH_DISABLE_LOGIN_ATTEMPTS_LOCK=true
 
   alertmanager:
-    image: prom/alertmanager
+    image: prom/alertmanager:v0.27.0
     container_name: alertmanager
     ports:
       - "9093:9093"
@@ -35,5 +37,7 @@ services:
       - .env
     command:
       - '--config.file=/etc/alertmanager/alertmanager.yml'
-      - '--config.expand-env'
-
+      - '--config.expand-env-vars' # Thêm dòng này để kích hoạt tính năng đọc env
+    environment:
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
