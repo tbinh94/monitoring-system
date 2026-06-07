@@ -1,0 +1,21 @@
+*.log
+.env
+*.db
+
+# Grafana data
+
+grafana-data/
+
+# Prometheus data
+
+prometheus-data/
+
+# Docker volumes
+
+data/
+
+# OS files
+
+.DS_Store
+Thumbs.db
+

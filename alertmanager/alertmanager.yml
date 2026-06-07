@@ -1,0 +1,19 @@
+global:
+
+route:
+  receiver: telegram
+
+receivers:
+  - name: telegram
+    telegram_configs:
+      - bot_token: '${TELEGRAM_BOT_TOKEN}'
+        chat_id: ${TELEGRAM_CHAT_ID}
+        parse_mode: HTML
+        message: |
+          ⚠️ Monitoring Alert
+
+          Alert: {{ .GroupLabels.alertname }}
+
+          {{ range .Alerts }}
+          {{ .Annotations.summary }}
+          {{ end }}

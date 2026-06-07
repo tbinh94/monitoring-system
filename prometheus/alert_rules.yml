@@ -1,0 +1,10 @@
+groups:
+  - name: system-alerts
+
+    rules:
+      - alert: HighMemoryUsage
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 10
+        for: 1m
+
+        annotations:
+          summary: "Memory usage exceeded threshold"
