@@ -31,13 +31,16 @@ services:
     ports:
       - "9093:9093"
     volumes:
-      - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+      - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml.template
     restart: unless-stopped
     env_file:
       - .env
-    command:
-      - '--config.file=/etc/alertmanager/alertmanager.yml'
-      - '--config.expand-env-vars' # Thêm dòng này để kích hoạt tính năng đọc env
-    environment:
-      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
-      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        sed -e 's|\$${TELEGRAM_BOT_TOKEN}|'"$${TELEGRAM_BOT_TOKEN}"'|g' \
+            -e 's|\$${TELEGRAM_CHAT_ID}|'"$${TELEGRAM_CHAT_ID}"'|g' \
+            /etc/alertmanager/alertmanager.yml.template > /tmp/alertmanager.yml
+        exec /bin/alertmanager --config.file=/tmp/alertmanager.yml
+
